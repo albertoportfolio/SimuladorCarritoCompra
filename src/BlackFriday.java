@@ -8,20 +8,20 @@ public class BlackFriday {
 
     private static final Scanner SC = new Scanner(System.in);
 
-    /* ========================= REGISTRO ========================= */
-    public static void registro(Connection con) {
+    /* ========================= REGISTER ========================= */
+    public static void register(Connection con) {
 
         try {
-            System.out.print("Introduce ID: ");
+            System.out.print("Enter ID: ");
             int id = Integer.parseInt(SC.nextLine());
 
-            System.out.print("Introduce username: ");
+            System.out.print("Enter username: ");
             String username = SC.nextLine();
 
-            System.out.print("Introduce password: ");
+            System.out.print("Enter password: ");
             String password = SC.nextLine();
 
-            System.out.print("Introduce email: ");
+            System.out.print("Enter email: ");
             String email = SC.nextLine();
 
             String checkSql = "SELECT 1 FROM users WHERE userEmail = ?";
@@ -30,7 +30,7 @@ public class BlackFriday {
                 ResultSet rs = check.executeQuery();
 
                 if (rs.next()) {
-                    System.out.println("El usuario ya existe.");
+                    System.out.println("User already exists.");
                     return;
                 }
             }
@@ -44,10 +44,10 @@ public class BlackFriday {
                 ps.executeUpdate();
             }
 
-            System.out.println("Usuario creado correctamente.");
+            System.out.println("User created successfully.");
 
         } catch (Exception e) {
-            System.out.println("Error en registro: " + e.getMessage());
+            System.out.println("Register error: " + e.getMessage());
         }
     }
 
@@ -66,7 +66,8 @@ public class BlackFriday {
 
             String sql = """
                     SELECT id FROM users
-                    WHERE userName = ? AND userPass = ? AND userEmail = ?""";
+                    WHERE userName = ? AND userPass = ? AND userEmail = ?
+                    """;
 
             try (PreparedStatement ps = con.prepareStatement(sql)) {
                 ps.setString(1, username);
@@ -75,54 +76,53 @@ public class BlackFriday {
 
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
-                    System.out.println("Login correcto.");
+                    System.out.println("Login successful.");
                     return new String[]{username, password, email, rs.getString("id")};
                 }
             }
 
-            System.out.println("Credenciales incorrectas.");
+            System.out.println("Invalid credentials.");
 
         } catch (Exception e) {
-            System.out.println("Error en login: " + e.getMessage());
+            System.out.println("Login error: " + e.getMessage());
         }
 
         return null;
     }
 
-    /* ========================= MENÚ ========================= */
+    /* ========================= MENU ========================= */
     public static void menu(Connection con, String[] user) throws Exception {
 
-        int opc = 0;
-        while (opc != 6) {
+        int option = 0;
+        while (option != 6) {
 
             System.out.println("""
-                        1. Buscar producto
-                        2. Añadir producto
-                        3. Mostrar carrito
-                        4. Eliminar producto
-                        5. Generar fichero
-                        6. Salir
+                        1. Search product
+                        2. Add product
+                        3. Show cart
+                        4. Remove product
+                        5. Generate file
+                        6. Exit
                     """);
 
-            opc = Integer.parseInt(SC.nextLine());
+            option = Integer.parseInt(SC.nextLine());
 
-            switch (opc) {
-
-                case 1 -> buscarProducto(con, user[0]);
-                case 2 -> anadirProducto(con, user[0]);
-                case 3 -> mostrarCarrito(con, user[0]);
-                case 4 -> eliminarProducto(con, user[0]);
-                case 5 -> generarFichero(user[0]);
-                case 6 -> System.out.println("Saliendo...");
+            switch (option) {
+                case 1 -> searchProduct(con, user[0]);
+                case 2 -> addProduct(con, user[0]);
+                case 3 -> showCart(con, user[0]);
+                case 4 -> removeProduct(con, user[0]);
+                case 5 -> generateFile(user[0]);
+                case 6 -> System.out.println("Exiting...");
             }
         }
     }
 
-    /* ========================= OPERACIONES ========================= */
-    private static void buscarProducto(Connection con, String user) throws Exception {
+    /* ========================= OPERATIONS ========================= */
+    private static void searchProduct(Connection con, String user) throws Exception {
 
-        System.out.print("Introduce texto a buscar: ");
-        String articulo = "%" + SC.nextLine() + "%";
+        System.out.print("Enter search text: ");
+        String product = "%" + SC.nextLine() + "%";
 
         String sql = """
                     SELECT p.id, p.description, p.price
@@ -133,23 +133,25 @@ public class BlackFriday {
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, user);
-            ps.setString(2, articulo);
+            ps.setString(2, product);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                System.out.println(rs.getInt(1) + " - " +
-                        rs.getString(2) + " - " +
-                        rs.getDouble(3));
+                System.out.println(
+                        rs.getInt(1) + " - " +
+                                rs.getString(2) + " - " +
+                                rs.getDouble(3)
+                );
             }
         }
     }
 
-    private static void anadirProducto(Connection con, String user) throws Exception {
+    private static void addProduct(Connection con, String user) throws Exception {
 
-        System.out.print("ID carrito: ");
+        System.out.print("Cart ID: ");
         int id = Integer.parseInt(SC.nextLine());
 
-        System.out.print("ID producto: ");
+        System.out.print("Product ID: ");
         int productId = Integer.parseInt(SC.nextLine());
 
         String sql = "INSERT INTO carts VALUES (?,?,?)";
@@ -161,7 +163,7 @@ public class BlackFriday {
         }
     }
 
-    private static void mostrarCarrito(Connection con, String user) throws Exception {
+    private static void showCart(Connection con, String user) throws Exception {
 
         String sql = """
                     SELECT c.id, p.description, p.price
@@ -177,7 +179,8 @@ public class BlackFriday {
             ResultSet rs = ps.executeQuery();
 
             System.out.println("ORDER SUMMARY (user: " + user + ")");
-            System.out.println("Date: " + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
+            System.out.println("Date: " +
+                    new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
 
             while (rs.next()) {
                 System.out.println(rs.getInt(1) + " - " + rs.getString(2));
@@ -186,12 +189,12 @@ public class BlackFriday {
         }
 
         System.out.println("TOTAL: " + total);
-        System.out.println("TOTAL con IVA (21%): " + (total * 1.21));
+        System.out.println("TOTAL incl. VAT (21%): " + (total * 1.21));
     }
 
-    private static void eliminarProducto(Connection con, String user) throws Exception {
+    private static void removeProduct(Connection con, String user) throws Exception {
 
-        System.out.print("ID a borrar: ");
+        System.out.print("Enter ID to remove: ");
         int id = Integer.parseInt(SC.nextLine());
 
         String sql = "DELETE FROM carts WHERE id = ? AND user = ?";
@@ -202,31 +205,32 @@ public class BlackFriday {
         }
     }
 
-    private static void generarFichero(String user) throws Exception {
+    private static void generateFile(String user) throws Exception {
 
-        String name = "order_" + user +
+        String fileName = "order_" + user +
                 new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".txt";
 
-        try (FileWriter fw = new FileWriter(name)) {
-            fw.write("Pedido generado para: " + user);
+        try (FileWriter fw = new FileWriter(fileName)) {
+            fw.write("Order generated for user: " + user);
         }
 
-        System.out.println("Fichero generado: " + name);
+        System.out.println("File generated: " + fileName);
     }
 
     /* ========================= MAIN ========================= */
     public static void main(String[] args) {
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/blackDB", "root", "")) {
+        try (Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/blackDB", "root", "")) {
 
-            System.out.println("Conexión creada");
+            System.out.println("Connection established.");
 
-            System.out.print("1 Registrar | 2 Login: ");
-            int opc = Integer.parseInt(SC.nextLine());
+            System.out.print("1 Register | 2 Login: ");
+            int option = Integer.parseInt(SC.nextLine());
 
-            if (opc == 1) {
-                registro(con);
-            } else if (opc == 2) {
+            if (option == 1) {
+                register(con);
+            } else if (option == 2) {
                 String[] user = login(con);
                 if (user != null) {
                     menu(con, user);
@@ -234,7 +238,7 @@ public class BlackFriday {
             }
 
         } catch (Exception e) {
-            System.out.println("Error general: " + e.getMessage());
+            System.out.println("General error: " + e.getMessage());
         }
     }
 }
