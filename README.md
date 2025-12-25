@@ -1,25 +1,22 @@
-🛒 BlackFriday Java
+# 🛒 BlackFriday Java
 
 Console-based Java application connected to MySQL (JDBC) that simulates a basic shopping system.
 
-✨ Features
+## ✨ Features
 
-User registration and login
+- User registration and login
 
-Shopping cart management (search, add, remove)
+- Shopping cart management (search, add, remove)
 
-Total price calculation with VAT
+- Total price calculation with VAT
 
-Order file generation
+- Order file generation
 
-🛠️ Tech Stack
+## 🛠️ Tech Stack
 
 ☕ Java · 🗄️ MySQL · 🔌 JDBC · 💻 IntelliJ · 🌱 Git
 
-▶️ Usage
+## Author: albertoportfolio
 
-Run BlackFriday.java and follow the console menu.
-
-📌 Educational project to practice Java + SQL.
-
-Author: albertoportfolio
+## 📄 License
+Distributed for educational purposes. Free to adapt and reuse for learning and practice.
