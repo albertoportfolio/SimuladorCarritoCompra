@@ -1,25 +1,25 @@
 🛒 BlackFriday Java
 
-Aplicación de consola en Java conectada a MySQL (JDBC) que simula un sistema básico de compras.
+Console-based Java application connected to MySQL (JDBC) that simulates a basic shopping system.
 
-✨ Funciones
+✨ Features
 
-Registro y login de usuarios
+User registration and login
 
-Gestión de carrito (buscar, añadir, eliminar)
+Shopping cart management (search, add, remove)
 
-Cálculo de total con IVA
+Total price calculation with VAT
 
-Generación de fichero de pedido
+Order file generation
 
-🛠️ Tecnologías
+🛠️ Tech Stack
 
 ☕ Java · 🗄️ MySQL · 🔌 JDBC · 💻 IntelliJ · 🌱 Git
 
-▶️ Uso
+▶️ Usage
 
-Ejecuta BlackFriday.java y sigue el menú por consola.
+Run BlackFriday.java and follow the console menu.
 
-📌 Proyecto educativo para practicar Java + SQL.
+📌 Educational project to practice Java + SQL.
 
-Autor: albertoportfolio
+Author: albertoportfolio
